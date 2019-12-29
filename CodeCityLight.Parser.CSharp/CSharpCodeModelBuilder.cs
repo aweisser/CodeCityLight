@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace CodeCityLight.Parser.CSharp
 {
-    public class CSharpCityModelBuilder : CSharpSyntaxWalker
+    public class CSharpCodeModelBuilder : CSharpSyntaxWalker
     {
-        private CodeCity codeCity;
+        private CodeModel codeModel;
 
-        public CSharpCityModelBuilder(CodeCity codeCity)
+        public CSharpCodeModelBuilder(CodeModel codeModel)
         {
-            this.codeCity = codeCity;
+            this.codeModel = codeModel;
         }
 
         public void BuildFrom(Solution solution)
@@ -50,9 +50,9 @@ namespace CodeCityLight.Parser.CSharp
 
         public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
         {
-            // Ensure that a district is created for this namespace
+            // Ensure that a CCNamespace is created for this namespace
             string namespaceName = GetNamespaceName(node);
-            District district = codeCity.EnsureDistrict(namespaceName);
+            CCNamespace ns = codeModel.EnsureNamespace(namespaceName);
 
             // Collect distinct usings from inside the namespace declaration and from the surrounding compilation unit.
             CompilationUnitSyntax cunit = GetCompilationUnit(node);
@@ -67,12 +67,12 @@ namespace CodeCityLight.Parser.CSharp
             }
 
             // Increment outgoing dependencies of the current namespace declaration
-            district.OutgoingDependencies += usings.Count;
+            ns.OutgoingDependencies += usings.Count;
 
             // Increment incoming depedencies for each referenced namespace. 
             foreach(var uname in usings)
             {
-                District d = codeCity.EnsureDistrict(uname);
+                CCNamespace d = codeModel.EnsureNamespace(uname);
                 d.IncomingDependencies++;
             }
 
@@ -81,38 +81,36 @@ namespace CodeCityLight.Parser.CSharp
 
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
-            // Ensure that a building is created for this class declaration
+            // Ensure that a CCClass is created for this class declaration
             string namespaceName = GetNamespaceName(node);
             string className = GetClassName(node);
-            codeCity.EnsureBuilding(namespaceName, className);
+            codeModel.EnsureClass(namespaceName, className);
             base.VisitClassDeclaration(node);
         }
 
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
             // Increment number of fields
-            Building building = GetBuilding(node);
-            building.NumberOfFields++;
+            GetClassFor(node).NumberOfFields++;
             base.VisitFieldDeclaration(node);
         }
 
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
             // Increment number of properties
-            Building building = GetBuilding(node);
-            building.NumberOfProperties++;
+            GetClassFor(node).NumberOfProperties++;
             base.VisitPropertyDeclaration(node);
         }
 
         public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
-            IncrementNumberOfMethodsForBuilding(node);
+            IncrementNumberOfMethodsForClassOf(node);
             base.VisitConstructorDeclaration(node);
         }
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            IncrementNumberOfMethodsForBuilding(node);
+            IncrementNumberOfMethodsForClassOf(node);
             base.VisitMethodDeclaration(node);
         }
         
@@ -121,79 +119,78 @@ namespace CodeCityLight.Parser.CSharp
             // Increment number of statements
             if(node is StatementSyntax && !(node is BlockSyntax))
             {
-                Building bulding = GetBuilding(node);
-                bulding.NumberOfStatements++;
+                GetClassFor(node).NumberOfStatements++;
             }
             base.Visit(node);
         }
 
         public override void VisitForStatement(ForStatementSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitForStatement(node);
         }
 
         public override void VisitForEachStatement(ForEachStatementSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitForEachStatement(node);
         }
 
         public override void VisitWhileStatement(WhileStatementSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitWhileStatement(node);
         }
 
         public override void VisitDoStatement(DoStatementSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitDoStatement(node);
         }
 
         public override void VisitCatchClause(CatchClauseSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitCatchClause(node);
         }
 
         public override void VisitConditionalExpression(ConditionalExpressionSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitConditionalExpression(node);
         }
 
         public override void VisitIfStatement(IfStatementSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitIfStatement(node);
         }
 
         public override void VisitElseClause(ElseClauseSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitElseClause(node);
         }
 
         public override void VisitCaseSwitchLabel(CaseSwitchLabelSyntax node)
         {
-            GetBuilding(node).NumberOfIndependentPaths++;
+            GetClassFor(node).NumberOfIndependentPaths++;
             base.VisitCaseSwitchLabel(node);
         }
 
         #region privates
-        private void IncrementNumberOfMethodsForBuilding(BaseMethodDeclarationSyntax node)
+        private void IncrementNumberOfMethodsForClassOf(BaseMethodDeclarationSyntax node)
         {
-            Building building = GetBuilding(node);
-            building.NumberOfMethods++;
-            building.NumberOfIndependentPaths++;
+            CCClass c = GetClassFor(node);
+            c.NumberOfMethods++;
+            c.NumberOfIndependentPaths++;
         }
 
-        private Building GetBuilding(SyntaxNode node)
+        private CCClass GetClassFor(SyntaxNode node)
         {
             string namespaceName = GetNamespaceName(node);
             string className = GetClassName(node);
-            return codeCity.GetBuildingByName(namespaceName, className);
+            return codeModel.GetClassByName(namespaceName, className);
         }
 
         private string GetNamespaceName(SyntaxNode node)

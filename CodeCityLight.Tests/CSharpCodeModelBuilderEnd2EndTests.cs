@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CodeCityLight.tests
 {
     [TestClass]
-    public class CSharpCityModelBuilderEnd2EndTests
+    public class CSharpCodeModelBuilderEnd2EndTests
     {
         /*
         Namespace: Petshop.Messaging.Email
@@ -15,53 +15,53 @@ namespace CodeCityLight.tests
         Namespace: Petshop.Shipping
         */
         private const string PetshopProjectFilePath = @"..\..\..\..\Petshop\Petshop.csproj";
-        private static CodeCity petshopCity;
+        private static CodeModel codeModel;
 
         [AssemblyInitialize]
         public static void TestSetup(TestContext testContext)
         {
             MSBuildLocator.RegisterDefaults();
             var project = MSBuildWorkspace.Create().OpenProjectAsync(PetshopProjectFilePath).Result;
-            petshopCity = new CodeCity("Petshop");
-            new CSharpCityModelBuilder(petshopCity).BuildFrom(project);
+            codeModel = new CodeModel("Petshop");
+            new CSharpCodeModelBuilder(codeModel).BuildFrom(project);
         }
 
         [TestMethod]
-        public void PetshopDistricts()
+        public void PetshopNamespaces()
         {
-            Assert.AreEqual(7, petshopCity.Districts.Count);
+            Assert.AreEqual(7, codeModel.Namespaces.Count);
 
-            District rootByName = petshopCity.GetDistrictByName("Petshop");
+            CCNamespace rootByName = codeModel.GetNamespaceByName("Petshop");
             Assert.IsNotNull(rootByName);
-            Assert.AreEqual(4, rootByName.Districts.Count);
+            Assert.AreEqual(4, rootByName.Namespaces.Count);
 
-            District rootByParentNull = petshopCity.GetRootDistricts()[0];
+            CCNamespace rootByParentNull = codeModel.GetRootNamespace()[0];
             Assert.AreEqual("Petshop", rootByParentNull.Name);
-            Assert.AreEqual(4, rootByParentNull.Districts.Count);
+            Assert.AreEqual(4, rootByParentNull.Namespaces.Count);
             Assert.AreEqual(rootByName, rootByParentNull);
 
-            District messaging = petshopCity.GetDistrictByName("Petshop.Messaging");
+            CCNamespace messaging = codeModel.GetNamespaceByName("Petshop.Messaging");
             Assert.IsNotNull(messaging);
-            Assert.AreEqual(1, messaging.Districts.Count);
+            Assert.AreEqual(1, messaging.Namespaces.Count);
 
-            District email = petshopCity.GetDistrictByName("Petshop.Messaging.Email");
-            District rootFromEmail = email.Parent.Parent;
+            CCNamespace email = codeModel.GetNamespaceByName("Petshop.Messaging.Email");
+            CCNamespace rootFromEmail = email.Parent.Parent;
             Assert.IsNotNull(rootFromEmail);
             Assert.AreEqual(rootByName, rootFromEmail);
         }
 
         [TestMethod]
-        public void PetshopEmailBuildings()
+        public void PetshopEmailClasses()
         {
-            District email = petshopCity.GetDistrictByName("Petshop.Messaging.Email");
-            Assert.AreEqual(1, email.Buildings.Count);
+            CCNamespace email = codeModel.GetNamespaceByName("Petshop.Messaging.Email");
+            Assert.AreEqual(1, email.Classes.Count);
         }
 
         [TestMethod]
         public void PetshopOrderManagementNumberOfFields()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
-            Building orderManagement = ordering.GetBuildingByName("OrderManagement");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
+            CCClass orderManagement = ordering.GetClassByName("OrderManagement");
 
             Assert.AreEqual(1, orderManagement.NumberOfFields);
         }
@@ -69,8 +69,8 @@ namespace CodeCityLight.tests
         [TestMethod]
         public void PetshopOrderNumberOfProperties()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
-            Building order = ordering.GetBuildingByName("Order");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
+            CCClass order = ordering.GetClassByName("Order");
 
             Assert.AreEqual(1, order.NumberOfProperties);
         }
@@ -78,22 +78,22 @@ namespace CodeCityLight.tests
         [TestMethod]
         public void PetshopOrderingOutgoingDependencies()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
             Assert.AreEqual(1, ordering.OutgoingDependencies);
         }
 
         [TestMethod]
         public void PetshopOrderingIncomingDependencies()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
             Assert.AreEqual(1, ordering.IncomingDependencies);
         }
 
         [TestMethod]
         public void PetshopOrderManagementNumberOfMethods()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
-            Building orderManagement = ordering.GetBuildingByName("OrderManagement");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
+            CCClass orderManagement = ordering.GetClassByName("OrderManagement");
 
             Assert.AreEqual(2, orderManagement.NumberOfMethods);
         }
@@ -101,8 +101,8 @@ namespace CodeCityLight.tests
         [TestMethod]
         public void PetshopOrderManagementNumberOfStatements()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
-            Building orderManagement = ordering.GetBuildingByName("OrderManagement");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
+            CCClass orderManagement = ordering.GetClassByName("OrderManagement");
 
             // Only statements, no blocks (but conditions inside a loop of if statement)
             Assert.AreEqual(19, orderManagement.NumberOfStatements);
@@ -111,8 +111,8 @@ namespace CodeCityLight.tests
         [TestMethod]
         public void PetshopOrderManagementNumberOfIndependentPaths()
         {
-            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
-            Building orderManagement = ordering.GetBuildingByName("OrderManagement");
+            CCNamespace ordering = codeModel.GetNamespaceByName("Petshop.Ordering");
+            CCClass orderManagement = ordering.GetClassByName("OrderManagement");
 
             // two methods, if statements, loops, catch clauses, switch cases.
             Assert.AreEqual(13, orderManagement.NumberOfIndependentPaths);
