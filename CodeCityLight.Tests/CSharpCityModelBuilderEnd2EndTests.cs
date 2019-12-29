@@ -104,7 +104,18 @@ namespace CodeCityLight.tests
             District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
             Building orderManagement = ordering.GetBuildingByName("OrderManagement");
 
-            Assert.AreEqual(7, orderManagement.NumberOfStatements);
+            // Only statements, no blocks (but conditions inside a loop of if statement)
+            Assert.AreEqual(19, orderManagement.NumberOfStatements);
+        }
+
+        [TestMethod]
+        public void PetshopOrderManagementNumberOfIndependentPaths()
+        {
+            District ordering = petshopCity.GetDistrictByName("Petshop.Ordering");
+            Building orderManagement = ordering.GetBuildingByName("OrderManagement");
+
+            // two methods, if statements, loops, catch clauses, switch cases.
+            Assert.AreEqual(13, orderManagement.NumberOfIndependentPaths);
         }
 
     }

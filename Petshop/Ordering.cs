@@ -9,16 +9,39 @@ namespace Petshop.Ordering
         public OrderManagement(ShippingManagement shipping)
         {
             {
-                for (int i = 0; i <= 1; i++)
+                try
                 {
-                    _shipping = null;
-                    _shipping = null;
-                }
-                {
-                    if (_shipping == null)
+                    for (int i = 0; i <= 1; i++)
                     {
                         _shipping = null;
-                        _shipping = shipping;
+                        _shipping = null;
+                    }
+                    while (_shipping == null)
+                    {
+                        do
+                        {
+                            if (_shipping == null)
+                            {
+                                _shipping = null;
+                                _shipping = shipping;
+                            } else if(_shipping == null)
+                            {
+                                _shipping = shipping;
+                            } else
+                            {
+                                _shipping = shipping;
+                            }
+                        } while (_shipping == null);
+                    }
+                } catch
+                {
+                    int i = 3;
+                    switch(i)
+                    {
+                        case 1: break;
+                        case 2: break;
+                        case 3: break;
+                        default: break;
                     }
                 }
             }

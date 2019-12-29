@@ -127,11 +127,66 @@ namespace CodeCityLight.Parser.CSharp
             base.Visit(node);
         }
 
+        public override void VisitForStatement(ForStatementSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitForStatement(node);
+        }
+
+        public override void VisitForEachStatement(ForEachStatementSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitForEachStatement(node);
+        }
+
+        public override void VisitWhileStatement(WhileStatementSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitWhileStatement(node);
+        }
+
+        public override void VisitDoStatement(DoStatementSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitDoStatement(node);
+        }
+
+        public override void VisitCatchClause(CatchClauseSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitCatchClause(node);
+        }
+
+        public override void VisitConditionalExpression(ConditionalExpressionSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitConditionalExpression(node);
+        }
+
+        public override void VisitIfStatement(IfStatementSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitIfStatement(node);
+        }
+
+        public override void VisitElseClause(ElseClauseSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitElseClause(node);
+        }
+
+        public override void VisitCaseSwitchLabel(CaseSwitchLabelSyntax node)
+        {
+            GetBuilding(node).NumberOfIndependentPaths++;
+            base.VisitCaseSwitchLabel(node);
+        }
+
         #region privates
         private void IncrementNumberOfMethodsForBuilding(BaseMethodDeclarationSyntax node)
         {
             Building building = GetBuilding(node);
             building.NumberOfMethods++;
+            building.NumberOfIndependentPaths++;
         }
 
         private Building GetBuilding(SyntaxNode node)
