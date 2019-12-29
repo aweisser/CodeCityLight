@@ -8,7 +8,20 @@ namespace Petshop.Ordering
 
         public OrderManagement(ShippingManagement shipping)
         {
-            _shipping = shipping;
+            {
+                for (int i = 0; i <= 1; i++)
+                {
+                    _shipping = null;
+                    _shipping = null;
+                }
+                {
+                    if (_shipping == null)
+                    {
+                        _shipping = null;
+                        _shipping = shipping;
+                    }
+                }
+            }
         }
 
         public void Apply(Order order)

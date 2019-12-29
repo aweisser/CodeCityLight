@@ -77,13 +77,33 @@ namespace CodeCityLight.Parser.CSharp
             base.VisitPropertyDeclaration(node);
         }
 
+        public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+        {
+            ParseBaseMethodDeclarationSyntax(node);
+            base.VisitConstructorDeclaration(node);
+        }
+
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            Building building = GetBuilding(node);
-            building.NumberOfMethods++;
+            ParseBaseMethodDeclarationSyntax(node);
             base.VisitMethodDeclaration(node);
         }
 
+        private void ParseBaseMethodDeclarationSyntax(BaseMethodDeclarationSyntax node)
+        {
+            Building building = GetBuilding(node);
+            building.NumberOfMethods++;
+        }
+
+        public override void Visit(SyntaxNode node)
+        {
+            if(node is StatementSyntax && !(node is BlockSyntax))
+            {
+                Building bulding = GetBuilding(node);
+                bulding.NumberOfStatements++;
+            }
+            base.Visit(node);
+        }
 
         private Building GetBuilding(SyntaxNode node)
         {

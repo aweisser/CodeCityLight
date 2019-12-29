@@ -109,7 +109,20 @@ namespace CodeCityLight.tests
             District ordering = codeCity.GetDistrictByName("Petshop.Ordering");
             Building orderManagement = ordering.GetBuildingByName("OrderManagement");
 
-            Assert.AreEqual(1, orderManagement.NumberOfMethods);
+            Assert.AreEqual(2, orderManagement.NumberOfMethods);
+        }
+
+        [TestMethod]
+        public void PetshopOrderManagementNumberOfStatements()
+        {
+            var project = MSBuildWorkspace.Create().OpenProjectAsync(PetshopProjectFilePath).Result;
+            CodeCity codeCity = new CodeCity("Petshop");
+            new CSharpCityModelBuilder(codeCity).BuildFrom(project);
+
+            District ordering = codeCity.GetDistrictByName("Petshop.Ordering");
+            Building orderManagement = ordering.GetBuildingByName("OrderManagement");
+
+            Assert.AreEqual(7, orderManagement.NumberOfStatements);
         }
 
     }

@@ -105,11 +105,13 @@ namespace CodeCityLight.Parser.CSharp
         public int NumberOfFields { get; set; } = 0;
         public int NumberOfProperties { get; set; } = 0;
         public int NumberOfMethods { get; set; } = 0;
+        public int NumberOfStatements { get; set; } = 0;
+
         /*
-         public int LinesOfCode { get; set; } = 0;
-         public int CyclomaticComplexity { get; set; } = 0;
-         public int Cohesion { get; set; } = 0;
-        */
+public int LinesOfCode { get; set; } = 0;
+public int CyclomaticComplexity { get; set; } = 0;
+public int Cohesion { get; set; } = 0;
+*/
         public Building(string name, District parent) : base(name)
         {
             Parent = parent;
