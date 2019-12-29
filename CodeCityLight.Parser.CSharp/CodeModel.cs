@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace CodeCityLight.Parser.CSharp
@@ -12,6 +14,7 @@ namespace CodeCityLight.Parser.CSharp
     /// </summary>
     public class CodeModel : NamedIdentity
     {
+        [JsonPropertyName("Districts")]
         public List<CCNamespace> Namespaces { get; } = new List<CCNamespace>();
 
         public CodeModel(string name) : base(name) { }
@@ -57,6 +60,15 @@ namespace CodeCityLight.Parser.CSharp
         {
             return GetNamespaceByName(nameOfNamespace).GetClassByName(nameOfClass);
         }
+
+        public string ToJson(bool writeIndented = false)
+        {
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = writeIndented
+            };
+            return JsonSerializer.Serialize(this, options);
+        }
     }
 
     /// <summary>
@@ -65,10 +77,17 @@ namespace CodeCityLight.Parser.CSharp
     /// </summary>
     public class CCNamespace : NamedIdentity
     {
+        [JsonPropertyName("Districts")]
         public List<CCNamespace> Namespaces { get; } = new List<CCNamespace>();
+
+        [JsonPropertyName("Buildings")]
         public List<CCClass> Classes { get; } = new List<CCClass>();
+
+        [JsonIgnore]
         public CCNamespace Parent { get; }
+
         public int OutgoingDependencies { get; set; } = 0;
+
         public int IncomingDependencies { get; set; } = 0;
 
         public CCNamespace(string name, CCNamespace parent) : base(name)
@@ -92,22 +111,27 @@ namespace CodeCityLight.Parser.CSharp
     /// </summary>
     public class CCClass : NamedIdentity
     {
+        public string FullName { get { return string.Concat(Parent.Name, ".", Name); } }
+
+        [JsonIgnore]
         public CCNamespace Parent { get; }
+
         public int NumberOfFields { get; set; } = 0;
+
         public int NumberOfProperties { get; set; } = 0;
+
         public int NumberOfMethods { get; set; } = 0;
+
         public int NumberOfStatements { get; set; } = 0; // better than lines of code.
+
         public int NumberOfIndependentPaths { get; set; } = 0; // aka CyclomaticComplexity
+        
         /*
             public int Cohesion { get; set; } = 0;
         */
         public CCClass(string name, CCNamespace parent) : base(name)
         {
-            if(parent == null)
-            {
-                throw new ArgumentNullException("parent");
-            }
-            Parent = parent;
+            Parent = parent ?? throw new ArgumentNullException("parent");
         }
     }
 
@@ -117,7 +141,7 @@ namespace CodeCityLight.Parser.CSharp
 
         protected NamedIdentity(string name)
         {
-            this.Name = name;
+            Name = name;
         }
 
         public override bool Equals(object obj)

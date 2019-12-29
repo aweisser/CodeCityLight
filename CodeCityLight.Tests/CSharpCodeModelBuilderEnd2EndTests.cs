@@ -118,5 +118,14 @@ namespace CodeCityLight.tests
             Assert.AreEqual(13, orderManagement.NumberOfIndependentPaths);
         }
 
+        [TestMethod]
+        public void SerializeCodeModelAsJson()
+        {
+            var json = codeModel.ToJson(true);
+            Assert.IsTrue(json.Contains("Districts"));
+            Assert.IsTrue(json.Contains("Buildings"));
+            Assert.IsTrue(json.Contains("\"FullName\": \"Petshop.Ordering.OrderManagement\""));
+        }
+
     }
 }
