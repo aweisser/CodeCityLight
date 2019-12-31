@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CodeCityLight.Parser.CSharp
+namespace CodeCityLight.CSharp.Parser
 {
     public class CSharpCodeModelBuilder : CSharpSyntaxWalker
     {

@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodeCityLight.Parser.CSharp\CodeCityLight.Parser.CSharp.csproj" />
+    <ProjectReference Include="..\CodeCityLight.Core\CodeCityLight.Core.csproj" />
+    <ProjectReference Include="..\CodeCityLight.CSharp.Parser\CodeCityLight.CSharp.Parser.csproj" />
   </ItemGroup>
 
 </Project>

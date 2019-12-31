@@ -1,4 +1,6 @@
-using CodeCityLight.Parser.CSharp;
+using CodeCityLight.CSharp;
+using CodeCityLight.CSharp.Parser;
+using CodeCityLight.GoCity;
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -6,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CodeCityLight.tests
 {
     [TestClass]
-    public class CSharpCodeModelBuilderEnd2EndTests
+    public class IntegrationTests
     {
         /*
         Namespace: Petshop.Messaging.Email
@@ -35,7 +37,7 @@ namespace CodeCityLight.tests
             Assert.IsNotNull(rootByName);
             Assert.AreEqual(4, rootByName.Namespaces.Count);
 
-            CCNamespace rootByParentNull = codeModel.GetRootNamespace()[0];
+            CCNamespace rootByParentNull = codeModel.GetRootNamespaces()[0];
             Assert.AreEqual("Petshop", rootByParentNull.Name);
             Assert.AreEqual(4, rootByParentNull.Namespaces.Count);
             Assert.AreEqual(rootByName, rootByParentNull);
@@ -127,5 +129,16 @@ namespace CodeCityLight.tests
             Assert.IsTrue(json.Contains("\"FullName\": \"Petshop.Ordering.OrderManagement\""));
         }
 
+        [TestMethod]
+        public void SerializeGoCityModelAsJson()
+        {
+            var goCityModel = CodeModel2GoCity.Convert(codeModel);
+            var json = goCityModel.ToJson(true);
+            System.Console.WriteLine(json);
+            Assert.IsTrue(json.Contains("children"));
+            Assert.IsTrue(json.Contains("numberOfLines"));
+            Assert.IsTrue(json.Contains("\"name\": \"OrderManagement\""));
+            Assert.IsTrue(json.Contains("\"url\": \"Petshop.Ordering.OrderManagement\""));
+        }
     }
 }

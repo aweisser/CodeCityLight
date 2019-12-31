@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeCityLight.Parser.CSharp", "CodeCityLight.Parser.CSharp\CodeCityLight.Parser.CSharp.csproj", "{987E9000-F2D3-4B5A-914B-456B20737E0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeCityLight.CSharp.Parser", "CodeCityLight.CSharp.Parser\CodeCityLight.CSharp.Parser.csproj", "{987E9000-F2D3-4B5A-914B-456B20737E0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeCityLight.Tests", "CodeCityLight.Tests\CodeCityLight.Tests.csproj", "{57F4F195-0365-4C08-832B-3FDEDF9D583A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Petshop", "Petshop\Petshop.csproj", "{1BA1CC69-BBD2-4D5C-A75E-B7E3FD9BB37E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCityLight.Core", "CodeCityLight.Core\CodeCityLight.Core.csproj", "{106D6060-104D-4339-9B61-A9ED19CB399D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{1BA1CC69-BBD2-4D5C-A75E-B7E3FD9BB37E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BA1CC69-BBD2-4D5C-A75E-B7E3FD9BB37E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BA1CC69-BBD2-4D5C-A75E-B7E3FD9BB37E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106D6060-104D-4339-9B61-A9ED19CB399D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106D6060-104D-4339-9B61-A9ED19CB399D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106D6060-104D-4339-9B61-A9ED19CB399D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106D6060-104D-4339-9B61-A9ED19CB399D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

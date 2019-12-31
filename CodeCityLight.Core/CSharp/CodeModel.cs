@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace CodeCityLight.Parser.CSharp
+namespace CodeCityLight.CSharp
 {
     /// <summary>
     /// The <see cref="CodeModel"/> is a the top level element of the domain model.
@@ -41,7 +41,7 @@ namespace CodeCityLight.Parser.CSharp
             return Namespaces.Find(d => d.Name.Equals(name));
         }
 
-        public List<CCNamespace> GetRootNamespace()
+        public List<CCNamespace> GetRootNamespaces()
         {
             return Namespaces.FindAll(d => d.Parent == null);
         }
